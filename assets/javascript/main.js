@@ -257,7 +257,7 @@ function showClock()
 {
 	$('body').append('<svg height="144" width="144" id="analog-timer"><circle id="analog-circumference" cx="72" cy="72" r="70" stroke="rgb(77,48,37)" stroke-width="1" fill="none"></circle></svg>');
 
-	$('body').append('<div id="timer-text">45</div>');
+	$('body').append('<div id="timer-text"></div>');
 
 	startClockIntro();
 }
@@ -275,13 +275,13 @@ function startClockIntro()
 	setTimeout('$("#timer-text").text("2")', 1925);
 	setTimeout('$("#timer-text").text("1"); $("#timer-text").css({opacity: "0"});', 2925);
 	setTimeout('$("#analog-circumference").css({animation: "none"});', 4000);
-	setTimeout('$("#timer-text").text("45"); $("#timer-text").css({opacity: "1"}); startClock()', 4030);
+	setTimeout('$("#timer-text").text(global_clock_time); $("#timer-text").css({opacity: "1"}); startClock()', 4030);
 }
 
 var clockTimer;
 function startClock()
 {
-	$("#analog-circumference").css({animation: "countdown 45s linear", animationFillMode: "forwards"});
+	$("#analog-circumference").css({animation: "countdown " + global_clock_time + "s linear", animationFillMode: "forwards"});
 	clockTimer = setInterval(decreaseClock, 1000);
 
 	$("#introWaterRow").css({transform: "translateY(-50px) translateX(-25px)"});
@@ -301,36 +301,40 @@ function startClock()
 
 	//add mouse events
 	$(".answer-text").on("click", clickAnswer);
-
 }
 
-var global_clock_time = 45;
+var global_clock_time = 10;
+var user_clock_time = 10;
 var global_question_selection = 0;
 var water_level = 0;
 var water_increase_height = ((window.innerHeight - 170) / global_clock_time);
 
 function decreaseClock()
 {
-	if(global_clock_time === 1)
+	global_clock_time--;
+	$("#timer-text").text(global_clock_time);
+
+	water_level++;
+	var water_translateY = "translateY(" + -((water_level * water_increase_height) + 50) + "px)";
+
+	$("#introWaterRow").css({transform: water_translateY + " translateX(-25px)"});
+	$(".coralIntroBackground").css({transform: water_translateY});
+
+	if(global_clock_time === 0)
 	{
 		clearInterval(clockTimer);
 		
 		$(".answer-text").off();
 		$(".answer-text").removeClass("answer-text-enabled");
 		$(".answer-text").css({filter: "blur(0px)"});
-		
-		/*$("#introWaterRow").css({transform: "translateY(" + (-(window.innerHeight + 260)) + "px)"});
-		$(".coralIntroBackground").css({transform: "translateY(" + (-(window.innerHeight + 260)) + "px)"});*/
-	}
-	
-	global_clock_time--;
-	$("#timer-text").text(global_clock_time);
 
-	water_level++;
-	var water_translateY = "translateY(" + -((water_level * water_increase_height) + 50) + "px)";
-	
-	$("#introWaterRow").css({transform: water_translateY + " translateX(-25px)"});
-	$(".coralIntroBackground").css({transform: water_translateY});
+		if(chosenMode !== "exam")
+		{
+			$("#timer-text").css({cursor: "pointer", transform: "translateX(-8px) translateY(0px)"});
+			$("#timer-text").html("&nbsp;&#8630;");
+		}
+		$("#analog-circumference").css({animation: "none"});
+	}
 }
 
 function showTriviaContainers()
@@ -374,7 +378,7 @@ function showTriviaContainers()
 		var $myDiv3 = $("<div></div>");
 		$myDiv3.addClass("answer-text");
 		$myDiv3.attr("id","answerText" + (currentAnswer + 1));
-		$myDiv3.css({top: ($("#questionText").outerHeight() + 99 + (currentAnswer * 50) + addedHeight) + "px"});
+		$myDiv3.css({top: ($("#questionText").outerHeight() + 114 + (currentAnswer * 50) + addedHeight) + "px"});
 		$myDiv3.html(myRandomAnswerArray[currentAnswer]);
 		
 		$("body").append($myDiv3);
@@ -413,7 +417,6 @@ function clickAnswer(event)
 	$(".answer-text").off();
 	$("#analog-circumference").css({animation: "none"});
 	clearInterval(clockTimer);
-	
 
 	var answer = $(this).text().substr(4, $(this).text().length);
 
@@ -423,8 +426,12 @@ function clickAnswer(event)
 	$(".answer-text").removeClass("answer-text-enabled");
 	$(".answer-text").css({filter: "blur(0px)"});
 
-	$("#timer-text").html("&nbsp;&#9654;");
-	$("#timer-text").css({cursor: "pointer", transform: "translateX(-5px), translateY(-2px)"});
+	if(chosenMode !== "exam")
+	{
+		$("#timer-text").html("&nbsp;&#9654;");
+		$("#timer-text").css({cursor: "pointer", transform: "translateX(-3px) translateY(-4px)"});
+		$("#timer-text").attr("onclick", "nextQuestion('byOne')");
+	}
 
 	if(isRight !== -1)
 	{
@@ -437,9 +444,14 @@ function clickAnswer(event)
 
 			if(currentAnswerIndex !== "4")
 			{
-				var newWhy = (4 - currentAnswerIndex) * 50;
-				$("#answerText" + currentAnswerIndex).css({transform: "translateY(" + newWhy + "px)"});
+				var newWhy = ((4 - currentAnswerIndex) * 50) - 25;
 			}
+			else
+			{
+				var newWhy = -25;
+			}
+			
+			setTimeout(function () { $("#answerText" + currentAnswerIndex).css({transition: "transform 1s", transform: "translateY(" + newWhy + "px)"}) }, 1000);
 
 			var wrongAnswersIndexArray = [];
 			for(var removeAnswers = 1; removeAnswers < 5; removeAnswers++)
@@ -454,7 +466,6 @@ function clickAnswer(event)
 			setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[0]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
 			setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[1]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
 			setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[2]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
-
 
 			setTimeout(createCheckmark, 1000);
 		}
@@ -539,14 +550,14 @@ function createCheckmark()
 {
 	$("body").append('<svg width="45" height="30" class="myGreenCheckmark"><rect width="10" height="20" style="fill:rgb(39,130,39); transform-origin: top; transform: rotateZ(-45deg);"></rect><rect width="10" height="30" style="fill:rgb(39,130,39); transform-origin: top; transform: translateX(-17px) translateY(14px) rotateZ(-136deg);"></rect></svg>');
 	$(".myGreenCheckmark").css({top: ($(".question-text").offset().top + $(".question-text").outerHeight())});
-	$(".myGreenCheckmark").css({transform: "translateY(107.5px)"});
+	$(".myGreenCheckmark").css({transform: "translateY(97.5px)"});
 
 	$("body").append('<div class="success-message">' + triviaObjects[global_question_selection].explanation[3] + "</div>");
 	var explainText_width = $(".success-message").outerWidth();
 	var explainText_left = "calc((100vw / 2) - " + (explainText_width / 2) + "px)"; 
 	$(".success-message").css({left: explainText_left});
 	$(".success-message").css({top: ($(".question-text").offset().top + $(".question-text").outerHeight())});
-	$(".success-message").css({transform: "translateY(50px)"});
+	$(".success-message").css({transform: "translateY(40px)"});
 
 	//setTimeout('$("#answerText" + currentAnswerIndex).css({transform: "translateX(10px) translateY(" + newWhy + "px)"})', 1000);
 }
@@ -558,17 +569,89 @@ function createError()
 	var explainText_left = "calc(50vw - " + explainText_width + "px)";
 	$(".error-message").css({left: explainText_left});
 	$(".error-message").css({top: ($(".question-text").offset().top + $(".question-text").outerHeight())});
-	$(".error-message").css({transform: "translateY(64px)"});
+	$(".error-message").css({transform: "translateY(79px)"});
 	
 	$("body").append('<div class="success-message">' + whichMessageToShow + "</div>");
 	var explainText_width2 = (document.getElementsByClassName("success-message")[0].getBoundingClientRect().width / 2);
 	var explainText_left2 = (window.innerWidth / 2 - explainText_width2) + "px"; 
 	$(".success-message").css({left: explainText_left2});
 	$(".success-message").css({top: ($(".question-text").offset().top + $(".question-text").outerHeight())});
-	$(".success-message").css({transform: "translateY(114px)"});
+	$(".success-message").css({transform: "translateY(129px)"});
 }
 
-function nextQuestion()
+function nextQuestion(advance)
 {
-	
+	$("#timer-text").attr("click", "");
+
+	if(advance === "byOne")
+	{
+		//global_question_selection++;
+	}
+
+	global_clock_time = user_clock_time;
+	/*$("#analog-timer")
+      $("#timer-text")*/
+
+	whichMessageToShow = "";
+	whichErrorToShow = "";
+
+	water_level = 0;
+	$("#introWaterRow").css({transform: "translateY(0px) translateX(-25px)"});
+	$(".coralIntroBackground").css({transform: "translateY(0px)"});
+
+	//fadeElements
+	$(".optional-message-text").css({animation: "none", filter: "opacity(100%)", transition: "filter 1s"});
+	$("#questionText").css({animation: "none", transition: "opacity 1s"});
+	if($("#answerText1").css("opacity") !== "0")  { $("#answerText1").css({animation: "none", transition: "opacity 1s"}); }
+	if($("#answerText2").css("opacity") !== "0")  {$("#answerText2").css({animation: "none", transition: "opacity 1s"}); }
+	if($("#answerText3").css("opacity") !== "0")  {$("#answerText3").css({animation: "none", transition: "opacity 1s"}); }
+	if($("#answerText4").css("opacity") !== "0")  {$("#answerText4").css({animation: "none", transition: "opacity 1s"}); }
+	$(".myGreenCheckmark").css({animation: "none", transition: "opacity 1s"});
+	$(".myRedX").css({animation: "none", transition: "opacity 1s"});
+	$(".error-message").css({animation: "none", transition: "opacity 1s"});
+	$(".success-message").css({animation: "none", transition: "opacity 1s"});
+
+	setTimeout(function () {
+	$(".optional-message-text").css({filter: "opacity(0%)"});
+	$("#questionText").css({opacity: "0"});
+	$("#answerText1").css({opacity: "0"});
+	$("#answerText2").css({opacity: "0"});
+	$("#answerText3").css({opacity: "0"});
+	$("#answerText4").css({opacity: "0"});
+	$(".myGreenCheckmark").css({opacity: "0"});
+	$(".myRedX").css({opacity: "0"});
+	$(".error-message").css({opacity: "0"});
+	$(".success-message").css({opacity: "0"});
+	}, 30);
+
+	//removeElements
+	setTimeout(function () {
+	$(".optional-message-text").remove();
+	$("#questionText").remove();
+	$("#answerText1").remove();
+	$("#answerText2").remove();
+	$("#answerText3").remove();
+	$("#answerText4").remove();
+	$(".myGreenCheckmark").remove();
+	$(".myRedX").remove();
+	$(".error-message").remove();
+	$(".success-message").remove();
+
+	}, 1130);
+
+	setTimeout(nextClockIntro, 1300);
+}
+
+function nextClockIntro()
+{
+	$("#analog-circumference").css({animation: "countdown 2s linear", animationFillMode: "forwards", animationDirection: "reverse"});
+	$("#timer-text").text("2");
+	$("#timer-text").css({opacity: "1", animation: "none"});
+
+	//loadTrivia
+	showTriviaContainers();
+
+	setTimeout('$("#timer-text").text("1"); $("#timer-text").css({opacity: "0"});', 925);
+	setTimeout('$("#analog-circumference").css({animation: "none"});', 2000);
+	setTimeout('$("#timer-text").text(global_clock_time); $("#timer-text").css({opacity: "1"}); startClock()', 2030);
 }

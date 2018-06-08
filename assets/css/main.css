@@ -117,12 +117,14 @@ body
 	text-align: center;
 	color: rgb(77,48,37);
 	top: 15px;
-	z-index: 13;
+	z-index: 56;
 	opacity: 0;
 	transform: translateX(-2px) translateY(-2px);
 	animation: showClock 1s linear;
   	animation-fill-mode: forwards;
 	transition: opacity 1s;
+	user-select: none;
+	-moz-user-select: none;
 }
 
 #analog-timer
@@ -130,7 +132,7 @@ body
 	position: absolute;
 	left: calc((100vw / 2) + 78px); 
 	top: 15px;
-	z-index: 12;
+	z-index: 55;
 	transform: rotate(270deg);
 }
 
