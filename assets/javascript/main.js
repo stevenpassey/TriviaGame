@@ -323,6 +323,7 @@ function decreaseClock()
 	if(global_clock_time === 0)
 	{
 		clearInterval(clockTimer);
+		$("#analog-circumference").css({animation: "none"});
 		
 		$(".answer-text").off();
 		$(".answer-text").removeClass("answer-text-enabled");
@@ -332,8 +333,33 @@ function decreaseClock()
 		{
 			$("#timer-text").css({cursor: "pointer", transform: "translateX(-8px) translateY(0px)"});
 			$("#timer-text").html("&nbsp;&#8630;");
+			$("#timer-text").attr("onclick", "nextQuestion('byNone')");
 		}
-		$("#analog-circumference").css({animation: "none"});
+		else if(chosenMode === "exam")
+		{
+			var currentAnswerIndex;
+
+			for(var findRightAnswer = 0; findRightAnswer < 4; findRightAnswer++)
+			{
+				var pickAnAnswer = $("#answerText" + (findRightAnswer + 1)).text().substr(4, $("#answerText" + (findRightAnswer + 1)).text().length);
+				
+				if(triviaObjects[global_question_selection].correctAnswer.indexOf(pickAnAnswer) !== -1)
+				{
+					currentAnswerIndex = (findRightAnswer + 1);
+				}
+			}
+
+			$("body").append('<svg width="45" height="30" class="myGreenCheckmark"><rect width="10" height="20" style="fill:rgb(39,130,39); transform-origin: top; transform: rotateZ(-45deg);"></rect><rect width="10" height="30" style="fill:rgb(39,130,39); transform-origin: top; transform: translateX(-17px) translateY(14px) rotateZ(-136deg);"></rect></svg>');
+			var checkMarkTopLocation = $("#answerText" + currentAnswerIndex).offset().top - 12;
+			var checkMarkLeftLocation = $("#answerText" + currentAnswerIndex).offset().left - 40;
+			$(".myGreenCheckmark").css({top: checkMarkTopLocation + "px"});
+			$(".myGreenCheckmark").css({left: checkMarkLeftLocation + "px"});
+
+			$("#timer-text").css({opacity: "0"});
+			setTimeout('$("#timer-text").css({opacity: "1"}); $("#timer-text").text("5");', 1100);
+			setTimeout('$("#timer-text").text("4");', 2100);
+			setTimeout('nextQuestion("byOne"); $("#timer-text").text("3");', 3100);
+		}
 	}
 }
 
@@ -435,113 +461,136 @@ function clickAnswer(event)
 
 	if(isRight !== -1)
 	{
-		if(chosenMode === "learning")
+		$(this).text(answer);
+		$(this).prepend("&nbsp; &nbsp;");
+
+		var currentAnswerIndex = this.id.substr(this.id.length - 1, this.id.length);
+
+		if(currentAnswerIndex !== "4" && chosenMode !== "exam")
 		{
-			$(this).text(answer);
-			$(this).prepend("&nbsp; &nbsp;");
+			var newWhy = ((4 - currentAnswerIndex) * 50) - 25;
+		}
+		else if (currentAnswerIndex == "4" && chosenMode !== "exam")
+		{
+			var newWhy = -25;
+		}
+		else if(currentAnswerIndex !== "1" && chosenMode !== "learning")
+		{
+			var newWhy = ((1 - currentAnswerIndex) * 50);
+		}
+		
+		//setTimeout(function () { $("#answerText" + currentAnswerIndex).css({, transform: "translateY(" + newWhy + "px)"}) }, 1000);
+		setTimeout(function () { $("#answerText" + currentAnswerIndex).css({transition: "transform 1s", transform: "translateY(" + newWhy + "px) translateX(5px)"}); 
+						 $(".myGreenCheckmark").css({transform: "translateY(" + newWhy + "px) translateX(5px)"});				
+			}, 1000);
 
-			var currentAnswerIndex = this.id.substr(this.id.length - 1, this.id.length);
-
-			if(currentAnswerIndex !== "4")
+		var wrongAnswersIndexArray = [];
+		for(var removeAnswers = 1; removeAnswers < 5; removeAnswers++)
+		{
+			if(removeAnswers != currentAnswerIndex)
 			{
-				var newWhy = ((4 - currentAnswerIndex) * 50) - 25;
+				$("#answerText" + removeAnswers ).css({animation: "none"});
+				wrongAnswersIndexArray.push(removeAnswers);
 			}
-			else
-			{
-				var newWhy = -25;
-			}
-			
-			setTimeout(function () { $("#answerText" + currentAnswerIndex).css({transition: "transform 1s", transform: "translateY(" + newWhy + "px)"}) }, 1000);
+		}
 
-			var wrongAnswersIndexArray = [];
-			for(var removeAnswers = 1; removeAnswers < 5; removeAnswers++)
-			{
-				if(removeAnswers != currentAnswerIndex)
-				{
-					$("#answerText" + removeAnswers ).css({animation: "none"});
-					wrongAnswersIndexArray.push(removeAnswers);
-				}
-			}
+		setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[0]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
+		setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[1]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
+		setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[2]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
 
-			setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[0]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
-			setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[1]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
-			setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[2]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
-
+		if(chosenMode !== "exam")
+		{
 			setTimeout(createCheckmark, 1000);
 		}
-	}
-	else
-	{
-		if(chosenMode === "learning")
+		else if(chosenMode === "exam")
 		{
-			var otherAnswerIndex = this.id.substr(this.id.length - 1, this.id.length);
-
-			var currentAnswerIndex;
-			
-			for(var findRightAnswer = 0; findRightAnswer < 4; findRightAnswer++)
-			{
-				var pickAnAnswer = $("#answerText" + (findRightAnswer + 1)).text().substr(4, $("#answerText" + (findRightAnswer + 1)).text().length);
-				
-				if(triviaObjects[global_question_selection].correctAnswer.indexOf(pickAnAnswer) !== -1)
-				{
-					currentAnswerIndex = (findRightAnswer + 1);
-				}
-			}
-
-			$(this).text(answer);
-			$(this).prepend("&nbsp; &nbsp;");
-			
-			$("#answerText" + currentAnswerIndex).text($("#answerText" + currentAnswerIndex).text().substr(4, $("#answerText" + currentAnswerIndex).text().length));
-			$("#answerText" + currentAnswerIndex).prepend("&nbsp; &nbsp;");
-
-			$(this).css({transition: "transform 1s"});
-			$("#answerText" + currentAnswerIndex).css({transition: "transform 1s"});
-
 			$("body").append('<svg width="45" height="30" class="myGreenCheckmark"><rect width="10" height="20" style="fill:rgb(39,130,39); transform-origin: top; transform: rotateZ(-45deg);"></rect><rect width="10" height="30" style="fill:rgb(39,130,39); transform-origin: top; transform: translateX(-17px) translateY(14px) rotateZ(-136deg);"></rect></svg>');
 			var checkMarkTopLocation = $("#answerText" + currentAnswerIndex).offset().top - 12;
 			var checkMarkLeftLocation = $("#answerText" + currentAnswerIndex).offset().left - 40;
 			$(".myGreenCheckmark").css({top: checkMarkTopLocation + "px"});
 			$(".myGreenCheckmark").css({left: checkMarkLeftLocation + "px"});
 
-			$("body").append('<svg width="45" height="30" class="myRedX"><rect width="10" height="30" style="fill:rgb(130,39,39); transform-origin: top; transform: rotateZ(-45deg) translateX(10px);"></rect><rect width="10" height="30" style="fill:rgb(130,39,39); transform-origin: top; transform: translateX(-17px) translateY(14px) rotateZ(-136deg);"></rect></svg>');
-			var xTopLocation = $("#answerText" + otherAnswerIndex).offset().top - 4;
-			var xLeftLocation = $("#answerText" + otherAnswerIndex).offset().left - 40;
-			$(".myRedX").css({top: xTopLocation + "px"});
-			$(".myRedX").css({left: xLeftLocation + "px"});
+			$("#timer-text").css({opacity: "0"});
+			setTimeout('$("#timer-text").css({opacity: "1"}); $("#timer-text").text("5");', 1100);
+			setTimeout('$("#timer-text").text("4");', 2100);
+			setTimeout('nextQuestion("byOne"); $("#timer-text").text("3");', 3100);
+		}
+	}
+	else
+	{
+		var otherAnswerIndex = this.id.substr(this.id.length - 1, this.id.length);
 
-
-			var newWhy = (4 - currentAnswerIndex) * 50;
-			setTimeout(function () { $("#answerText" + currentAnswerIndex).css({transform: "translateY(" + newWhy + "px) translateX(5px)"}); 
-							 $(".myGreenCheckmark").css({transform: "translateY(" + newWhy + "px) translateX(5px)"});				
-			}, 1000);
+		var currentAnswerIndex;
 			
-
-			
-			var newWhy2 = -((otherAnswerIndex - 1) * 50);
-			setTimeout(function () { $("#answerText" + otherAnswerIndex).css({transform: "translateY(" + newWhy2 + "px) translateX(5px)"}); 
-							 $(".myRedX").css({transform: "translateY(" + newWhy2 + "px) translateX(5px)"});							
-			}, 1000);
-			
-
-			var wrongAnswersIndexArray = [];
-			for(var removeAnswers = 1; removeAnswers < 5; removeAnswers++)
+		for(var findRightAnswer = 0; findRightAnswer < 4; findRightAnswer++)
+		{
+			var pickAnAnswer = $("#answerText" + (findRightAnswer + 1)).text().substr(4, $("#answerText" + (findRightAnswer + 1)).text().length);
+				
+			if(triviaObjects[global_question_selection].correctAnswer.indexOf(pickAnAnswer) !== -1)
 			{
-				if(removeAnswers != otherAnswerIndex && removeAnswers != currentAnswerIndex)
-				{
-					$("#answerText" + removeAnswers ).css({animation: "none"});
-					wrongAnswersIndexArray.push(removeAnswers);
-				}
-				else if(removeAnswers == currentAnswerIndex)
-				{
-					whichMessageToShow = triviaObjects[global_question_selection].explanation[triviaObjects[global_question_selection].wrongAnswers.indexOf(answer)];
-					whichErrorToShow = triviaObjects[global_question_selection].errorMessage[triviaObjects[global_question_selection].wrongAnswers.indexOf(answer)];
-				}
+				currentAnswerIndex = (findRightAnswer + 1);
 			}
+		}
 
-			setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[0]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
-			setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[1]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
+		$(this).text(answer);
+		$(this).prepend("&nbsp; &nbsp;");
+			
+		$("#answerText" + currentAnswerIndex).text($("#answerText" + currentAnswerIndex).text().substr(4, $("#answerText" + currentAnswerIndex).text().length));
+		$("#answerText" + currentAnswerIndex).prepend("&nbsp; &nbsp;");
 
+		$(this).css({transition: "transform 1s"});
+		$("#answerText" + currentAnswerIndex).css({transition: "transform 1s"});
+
+		$("body").append('<svg width="45" height="30" class="myGreenCheckmark"><rect width="10" height="20" style="fill:rgb(39,130,39); transform-origin: top; transform: rotateZ(-45deg);"></rect><rect width="10" height="30" style="fill:rgb(39,130,39); transform-origin: top; transform: translateX(-17px) translateY(14px) rotateZ(-136deg);"></rect></svg>');
+		var checkMarkTopLocation = $("#answerText" + currentAnswerIndex).offset().top - 12;
+		var checkMarkLeftLocation = $("#answerText" + currentAnswerIndex).offset().left - 40;
+		$(".myGreenCheckmark").css({top: checkMarkTopLocation + "px"});
+		$(".myGreenCheckmark").css({left: checkMarkLeftLocation + "px"});
+
+		$("body").append('<svg width="45" height="30" class="myRedX"><rect width="10" height="30" style="fill:rgb(130,39,39); transform-origin: top; transform: rotateZ(-45deg) translateX(10px);"></rect><rect width="10" height="30" style="fill:rgb(130,39,39); transform-origin: top; transform: translateX(-17px) translateY(14px) rotateZ(-136deg);"></rect></svg>');
+		var xTopLocation = $("#answerText" + otherAnswerIndex).offset().top - 4;
+		var xLeftLocation = $("#answerText" + otherAnswerIndex).offset().left - 40;
+		$(".myRedX").css({top: xTopLocation + "px"});
+		$(".myRedX").css({left: xLeftLocation + "px"});
+
+		var newWhy = (4 - currentAnswerIndex) * 50;
+		setTimeout(function () { $("#answerText" + currentAnswerIndex).css({transform: "translateY(" + newWhy + "px) translateX(5px)"}); 
+						 $(".myGreenCheckmark").css({transform: "translateY(" + newWhy + "px) translateX(5px)"});				
+		}, 1000);
+						
+		var newWhy2 = -((otherAnswerIndex - 1) * 50);
+		setTimeout(function () { $("#answerText" + otherAnswerIndex).css({transform: "translateY(" + newWhy2 + "px) translateX(5px)"}); 
+						 $(".myRedX").css({transform: "translateY(" + newWhy2 + "px) translateX(5px)"});							
+		}, 1000);
+			
+		var wrongAnswersIndexArray = [];
+		for(var removeAnswers = 1; removeAnswers < 5; removeAnswers++)
+		{
+			if(removeAnswers != otherAnswerIndex && removeAnswers != currentAnswerIndex)
+			{
+				$("#answerText" + removeAnswers ).css({animation: "none"});
+				wrongAnswersIndexArray.push(removeAnswers);
+			}
+			else if(removeAnswers == currentAnswerIndex)
+			{
+				whichMessageToShow = triviaObjects[global_question_selection].explanation[triviaObjects[global_question_selection].wrongAnswers.indexOf(answer)];
+				whichErrorToShow = triviaObjects[global_question_selection].errorMessage[triviaObjects[global_question_selection].wrongAnswers.indexOf(answer)];
+			}
+		}
+
+		setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[0]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
+		setTimeout(function () {  $("#answerText" + wrongAnswersIndexArray[1]).css({animation: "showClock 1s linear forwards", animationDirection: "reverse"}); }, 30);
+
+		if(chosenMode === "learning")
+		{
 			setTimeout(createError, 1000);
+		}
+		else if(chosenMode === "exam")
+		{
+			$("#timer-text").css({opacity: "0"});
+			setTimeout('$("#timer-text").css({opacity: "1"}); $("#timer-text").text("5");', 1100);
+			setTimeout('$("#timer-text").text("4");', 2100);
+			setTimeout('nextQuestion("byOne"); $("#timer-text").text("3");', 3100);
 		}
 	}
 }
@@ -558,8 +607,6 @@ function createCheckmark()
 	$(".success-message").css({left: explainText_left});
 	$(".success-message").css({top: ($(".question-text").offset().top + $(".question-text").outerHeight())});
 	$(".success-message").css({transform: "translateY(40px)"});
-
-	//setTimeout('$("#answerText" + currentAnswerIndex).css({transform: "translateX(10px) translateY(" + newWhy + "px)"})', 1000);
 }
 
 function createError()
@@ -581,7 +628,14 @@ function createError()
 
 function nextQuestion(advance)
 {
-	$("#timer-text").attr("click", "");
+	if(chosenMode !== "exam")
+	{
+		$("#timer-text").attr("onclick", "");
+		setTimeout(function () {
+		$("#timer-text").css({cursor: "default", transform: "translateX(-2px) translateY(-2px)"});
+		$("#timer-text").text("3");
+		}, 60);
+	}
 
 	if(advance === "byOne")
 	{
@@ -637,21 +691,20 @@ function nextQuestion(advance)
 	$(".error-message").remove();
 	$(".success-message").remove();
 
-	}, 1130);
+	}, 1035);
 
-	setTimeout(nextClockIntro, 1300);
+	setTimeout(nextClockIntro, 1060);
 }
 
 function nextClockIntro()
 {
-	$("#analog-circumference").css({animation: "countdown 2s linear", animationFillMode: "forwards", animationDirection: "reverse"});
 	$("#timer-text").text("2");
 	$("#timer-text").css({opacity: "1", animation: "none"});
 
 	//loadTrivia
 	showTriviaContainers();
 
-	setTimeout('$("#timer-text").text("1"); $("#timer-text").css({opacity: "0"});', 925);
+	setTimeout('$("#timer-text").text("1"); $("#timer-text").css({opacity: "0"});', 1005);
 	setTimeout('$("#analog-circumference").css({animation: "none"});', 2000);
 	setTimeout('$("#timer-text").text(global_clock_time); $("#timer-text").css({opacity: "1"}); startClock()', 2030);
 }
