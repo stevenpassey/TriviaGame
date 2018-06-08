@@ -261,7 +261,17 @@ body
 	left: calc((100vw / 2) - 22.5px); 
 	top: 200px;
 	z-index: 65;
-	animation: showClock 1s linear forwards;
+	/*animation: showClock 1s linear forwards;*/
+	transition: transform 1s;
+}
+
+.myRedX
+{
+	position: absolute;
+	left: calc((100vw / 2) - 22.5px); 
+	top: 200px;
+	z-index: 65;
+	/*animation: showClock 1s linear forwards;*/
 	transition: transform 1s;
 }
 

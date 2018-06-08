@@ -411,8 +411,9 @@ var whichErrorToShow;
 function clickAnswer(event)
 {
 	$(".answer-text").off();
-	$("#analog-circumference").css({animationPlayState: "paused"});
+	$("#analog-circumference").css({animation: "none"});
 	clearInterval(clockTimer);
+	
 
 	var answer = $(this).text().substr(4, $(this).text().length);
 
@@ -482,17 +483,31 @@ function clickAnswer(event)
 			$("#answerText" + currentAnswerIndex).text($("#answerText" + currentAnswerIndex).text().substr(4, $("#answerText" + currentAnswerIndex).text().length));
 			$("#answerText" + currentAnswerIndex).prepend("&nbsp; &nbsp;");
 
-			if(currentAnswerIndex !== "4")
-			{
-				var newWhy = (4 - currentAnswerIndex) * 50;
-				$("#answerText" + currentAnswerIndex).css({transform: "translateY(" + newWhy + "px)"});
-			}
+			$("body").append('<svg width="45" height="30" class="myGreenCheckmark"><rect width="10" height="20" style="fill:rgb(39,130,39); transform-origin: top; transform: rotateZ(-45deg);"></rect><rect width="10" height="30" style="fill:rgb(39,130,39); transform-origin: top; transform: translateX(-17px) translateY(14px) rotateZ(-136deg);"></rect></svg>');
+			var checkMarkTopLocation = $("#answerText" + currentAnswerIndex).offset().top - 12;
+			var checkMarkLeftLocation = $("#answerText" + currentAnswerIndex).offset().left - 40;
+			$(".myGreenCheckmark").css({top: checkMarkTopLocation + "px"});
+			$(".myGreenCheckmark").css({left: checkMarkLeftLocation + "px"});
 
-			if(otherAnswerIndex !== "1")
-			{
+			$("body").append('<svg width="45" height="30" class="myRedX"><rect width="10" height="30" style="fill:rgb(130,39,39); transform-origin: top; transform: rotateZ(-45deg) translateX(10px);"></rect><rect width="10" height="30" style="fill:rgb(130,39,39); transform-origin: top; transform: translateX(-17px) translateY(14px) rotateZ(-136deg);"></rect></svg>');
+			var xTopLocation = $("#answerText" + otherAnswerIndex).offset().top - 4;
+			var xLeftLocation = $("#answerText" + otherAnswerIndex).offset().left - 40;
+			$(".myRedX").css({top: xTopLocation + "px"});
+			$(".myRedX").css({left: xLeftLocation + "px"});
+
+
+				var newWhy = (4 - currentAnswerIndex) * 50;
+				setTimeout(function () { $("#answerText" + currentAnswerIndex).css({transform: "translateY(" + newWhy + "px) translateX(5px)"}); 
+								 $(".myGreenCheckmark").css({transform: "translateY(" + newWhy + "px) translateX(5px)"});				
+				}, 1000);
+			
+
+			
 				var newWhy2 = -((otherAnswerIndex - 1) * 50);
-				$("#answerText" + otherAnswerIndex).css({transform: "translateY(" + newWhy2 + "px)"});
-			}
+				setTimeout(function () { $("#answerText" + otherAnswerIndex).css({transform: "translateY(" + newWhy2 + "px) translateX(5px)"}); 
+							       $(".myRedX").css({transform: "translateY(" + newWhy2 + "px) translateX(5px)"});							
+				}, 1000);
+			
 
 			var wrongAnswersIndexArray = [];
 			for(var removeAnswers = 1; removeAnswers < 5; removeAnswers++)
