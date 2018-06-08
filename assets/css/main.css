@@ -1,0 +1,304 @@
+@import url('https://fonts.googleapis.com/css?family=Muli:200');
+
+body
+{
+	/*background-color: rgb(255, 160, 122);*/
+	/*background-color: rgb(51,73,82);
+	/*background-color: rgb(50,95,95); green */
+	/*background-color: rgb(50,73,95); */
+	/*background-color: rgb(0,95,133); negative*/
+
+	background-color: rgb(50,73,95);
+	/*background-color: rgb(40,86,128); /*lighterblue*/
+	margin: 0;
+	overflow: hidden;
+}
+
+.mode-label
+{
+	text-align: center;
+	font-family: 'Muli', sans-serif;
+	font-size: 45px;
+	width: 300px; 
+	height: 50px;
+	position: absolute; 
+	left: calc((100vw / 2) - 150px); 
+	top: 57px;
+	opacity: 1;
+	color: rgb(77,48,37);
+	z-index: 55;
+	user-select: none;
+	-moz-user-select: none;
+}
+
+.mode-desc
+{
+	text-align: center;
+	font-family: 'Muli', sans-serif;
+	font-size: 30px;
+	width: 310px; 
+	height: 50px;
+	position: absolute; 
+	left: calc((100vw / 2) - 160px); 
+	top: 300px;
+	opacity: 1;
+	color: rgb(77,48,37);
+	/*color: rgb(204,223,231); negative blue */
+	/*color: rgb(169,169,169); gray*/
+	z-index: 55;
+	filter: blur(10px);
+	user-select: none;
+	-moz-user-select: none;
+	cursor: pointer;
+	/*
+	mix-blend-mode: difference;*/
+}
+
+.mode-desc_noblur
+{
+	filter: blur(0px);
+}
+
+.mode-desc hr
+{
+	border: none;
+	height: 1px;
+	background-color: rgba(77,48,37, 0.3);
+	pointer-events: none;
+}
+
+.blurGlow
+{
+}
+
+.blurGlow span
+{
+	animation: blurless 2s linear infinite forwards alternate;
+}
+
+@keyframes blurless
+{
+	from
+	{
+		opacity: 1;
+	}
+	
+	to
+	{
+		opacity: 0;
+	}
+}
+
+#details_exam_desc
+{	
+	pointer-events: none;
+	opacity: 0;
+	transform: translateY(-40px);
+	transition: opacity 250ms, transform 250ms;
+}
+
+#details_learning_desc
+{
+	pointer-events: none;
+	opacity: 0;
+	transform: translateY(-40px);
+	transition: opacity 250ms, transform 250ms;
+}
+
+#timer-text
+{
+	font-family: Muli;
+	font-size: 60px;
+	position: absolute;
+	left: calc((100vw / 2) + 78px);
+	width: 144px;
+	height: 144px;
+	line-height: 144px;
+	text-align: center;
+	color: rgb(77,48,37);
+	top: 15px;
+	z-index: 13;
+	opacity: 0;
+	transform: translateX(-2px) translateY(-2px);
+	animation: showClock 1s linear;
+  	animation-fill-mode: forwards;
+	transition: opacity 1s;
+}
+
+#analog-timer
+{
+	position: absolute;
+	left: calc((100vw / 2) + 78px); 
+	top: 15px;
+	z-index: 12;
+	transform: rotate(270deg);
+}
+
+
+#analog-circumference
+{
+	stroke-dasharray: 440;
+	stroke-dashoffset: 880;
+	animation: showClock 1s linear;
+  	animation-fill-mode: forwards;
+}
+
+@keyframes countdown 
+{
+	0%  
+	{
+		stroke-dashoffset: 880;
+	}
+
+	100% 
+	{	
+		stroke-dashoffset: 440;
+	}
+}
+
+@keyframes showClock
+{
+	from
+	{
+		opacity: 0;
+	}
+	
+	to
+	{
+		opacity: 1;
+	}
+}
+
+/*///////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+/*///////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+/*///////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+/*///////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+
+.optional-message-text
+{
+	font-family: Muli;
+	font-size: 25px;
+	color: rgb(204,223,231);
+	position: absolute;
+	left: calc((100vw / 2) - 300px); 
+	top: 200px;
+	z-index: 65;
+	width: 600px;
+	text-align: center;
+	mix-blend-mode: difference;
+	filter: blur(10px);
+	animation: showClock 1s linear forwards;
+	user-select: none;
+	-moz-user-select: none;
+	
+}
+
+.question-text
+{
+	font-family: Muli;
+	font-size: 25px;
+	color: hsl(0, 0%, 56%);
+	position: absolute;
+	left: calc((100vw / 2) - 300px); 
+	top: 200px;
+	z-index: 65;
+	width: 600px;
+	text-align: center;
+	mix-blend-mode: difference;
+	animation: showClock 1s linear forwards;
+	background: hsla(0, 0%, 17%, 0.4);
+	border-radius: 40px;
+	padding: 10px 0px 12px 0px;
+	filter: blur(15px);
+	user-select: none;
+	-moz-user-select: none;
+}
+
+.answer-text
+{
+	font-family: Muli;
+	font-size: 18px;
+	color: hsl(0, 42%, 73%);
+	position: absolute;
+	left: calc((100vw / 2) - 300px); 
+	top: 200px;
+	z-index: 65;
+	mix-blend-mode: difference;
+	animation: showClock 1s linear forwards;
+	/*background: hsl(0, 45%, 9%);*/
+	filter: blur(10px);
+	user-select: none;
+	-moz-user-select: none;
+	transition: transform 1s;
+}
+
+.answer-text-enabled
+{
+	filter: blur(0px);
+	cursor: pointer;
+}
+
+.answer-text-enabled:hover
+{
+	filter: blur(0px) hue-rotate(180deg);
+}
+
+.answer-text-enabled:active
+{
+	filter: blur(0px) hue-rotate(270deg);
+}
+
+.question-text pre
+{
+	white-space: pre-line;
+	/*white-space: -moz-pre-wrap;*/
+}
+
+.myGreenCheckmark
+{
+	position: absolute;
+	left: calc((100vw / 2) - 22.5px); 
+	top: 200px;
+	z-index: 65;
+	animation: showClock 1s linear forwards;
+	transition: transform 1s;
+}
+
+.success-message
+{
+	position: absolute;
+	left: calc((100vw / 2) - 22.5px); 
+	top: 200px;
+	z-index: 65;
+	animation: showClock 1s linear forwards;
+	transition: transform 1s;
+
+	font-family: Muli;
+	font-size: 18px;
+	color: hsl(0, 42%, 73%);
+	mix-blend-mode: difference;
+	user-select: none;
+	-moz-user-select: none;
+}
+
+.error-message
+{
+	position: absolute;
+	left: calc((100vw / 2) - 22.5px); 
+	top: 200px;
+	z-index: 65;
+	animation: showClock 1s linear forwards;
+	transition: transform 1s;
+	background-color: hsla(0, 0%, 17%, 0.4);
+	font-family: Muli;
+	font-size: 18px;
+	color: hsl(0, 42%, 73%);
+	mix-blend-mode: difference;
+	user-select: none;
+	-moz-user-select: none;
+}
+
+
+
+

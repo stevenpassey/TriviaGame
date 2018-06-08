@@ -1,0 +1,232 @@
+#start-square
+{
+	transition: transform 100ms; 
+	box-shadow: 0px 1px 15px rgb(0,0,0,0.3);
+	animation: wiggle linear infinite 2000ms;
+	animation-fill-mode: forwards;
+	transform: scale(0.9,0.9) rotate(0deg);
+}
+
+@keyframes wiggle
+{
+	0%
+	{
+		transform: scale(0.9,0.9) rotate(3deg);
+	}
+	
+	5%
+	{
+		transform: scale(0.9,0.9) rotate(-3deg);
+	}
+
+	10%
+	{
+		transform: scale(0.9,0.9) rotate(3deg);
+	}
+	
+	15%
+	{
+		transform: scale(0.9,0.9) rotate(-3deg);
+	}
+
+	20%
+	{
+		transform: scale(0.9,0.9) rotate(0deg);
+	}
+
+	100%
+	{
+		transform: scale(0.9,0.9) rotate(0deg);
+	}
+}
+
+.intro-square-row
+{
+	white-space: nowrap;
+}
+
+.intro-square-svg
+{
+	transform: scale(0,0);
+	animation: growSquare ease-in-out 1000ms;
+	animation-fill-mode: forwards;
+	animation-direction: alternate;
+	opacity: 0;
+	box-shadow: 0px 1px 15px rgb(0,0,0,0.4);
+	
+}
+
+@keyframes growSquare
+{
+	0%
+	{
+		opacity: 0;
+		box-shadow: 0px 1px 15px rgb(0,0,0,0.4);
+		transform: scale(0,0);
+	}
+
+	25%
+	{
+		opacity: 1;
+		box-shadow: 0px 1px 15px rgb(0,0,0,0.4);
+		transform: scale(1.5,1.5);
+	}
+
+	50%
+	{
+		opacity: 1;
+		box-shadow: 0px 1px 15px rgb(0,0,0,0.4);
+		transform: scale(1,1);
+	}
+
+	100%
+	{
+		opacity: 1;
+		box-shadow: 0px 1px 15px rgb(0,0,0,0.0);
+		transform: scale(1,1);
+	}
+}
+
+.coralIntroBackground
+{
+	transition: transform 1s;
+}
+
+.intro-image-class_blur
+{
+	width: 300px; 
+	height: 222px;
+	position: absolute; 
+	left: calc((100vw / 2) - 150px); 
+	top: calc((100vh / 2) - 222px);
+	opacity: 0;
+	filter: blur(3px);
+	transition: opacity 1250ms, filter 2s;
+}
+
+.intro-image-class
+{
+	width: 300px; 
+	height: 222px;
+	position: absolute; 
+	left: calc((100vw / 2) - 150px); 
+	top: calc((100vh / 2) - 222px);
+	opacity: 0.7;
+	transition: opacity 2s, filter 2s;
+	z-index: 50;
+}
+
+.intro-water-row
+{
+	width: 100%;
+	height: 130px;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	white-space: nowrap;
+	transition: transform 1s;
+}
+
+.intro-water-square-svg
+{
+	transform: scale(2,2);
+	border-radius: 50%;
+	animation: introWaterSquare linear infinite 2000ms;
+	animation-fill-mode: forwards;
+	animation-direction: alternate;
+}
+
+@keyframes introWaterSquare
+{
+	0%
+	{
+		transform: scale(2,2) translateY(0px) translateX(0px);
+	}
+
+	25%
+	{
+		transform: scale(2,2) translateY(1.052px) translateX(3px);
+	}
+
+	50%
+	{
+		transform: scale(2,2) translateY(0px) translateX(6px);
+	}
+
+	100%
+	{
+		transform: scale(2,2) translateY(3.896px) translateX(3px);
+	}
+}
+
+.intro-button_blur
+{
+	text-align: center;
+	font-family: sans-serif;
+	font-size: 36px;
+	width: 150px; 
+	height: 150px;
+	position: absolute; 
+	left: calc((100vw / 2) - 75px); 
+	top: calc((100vh / 2) + 30px);
+	opacity: 0;
+	filter: blur(3px);
+	color: rgb(77,48,37);
+	transition: opacity 2s, filter 2s;
+	cursor: default;
+}
+
+.intro-button
+{
+	text-align: center;
+	font-family: sans-serif;
+	font-size: 36px;
+	width: 150px; 
+	height: 45px;
+	position: absolute; 
+	left: calc((100vw / 2) - 75px); 
+	top: calc((100vh / 2) + 30px);
+	opacity: 1;
+	filter: blur(0px);
+	color: rgb(77,48,37);
+	transition: opacity 2s, filter 2s;
+	cursor: pointer;
+	overflow: hidden;
+	white-space: nowrap;
+	z-index: 50;
+	border-radius: 25px;
+	user-select: none;
+	-moz-user-select: none;
+}
+
+.intro-button-background
+{
+	width: 150px; 
+	height: 45px;
+	position: absolute; 
+	left: calc((100vw / 2) - 75px); 
+	top: calc((100vh / 2) + 30px);
+	white-space: nowrap;
+	z-index: 45;
+	overflow: hidden;
+	border-radius: 25px;
+}
+
+
+.highlight-square-svg2
+{
+	opacity: 1;
+	transition: opacity linear 1s, transform linear 1s;
+	border-radius: 50%;
+	transform: scale(0,0);
+	z-index: 47;
+}
+
+.highlight-square-svg
+{
+	opacity: 0;
+	transform: scale(1,1);
+	transition: opacity linear 500ms, transform linear 500ms;
+	border-radius: 50%;
+	z-index: 46;
+}
