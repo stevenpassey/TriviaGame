@@ -27,7 +27,7 @@ function addNewTriviaObject(question)
 
 		var newErrorMessage = ["Console output: Uncaught TypeError: element.addClass is not a function", 
 					     "Console output: Uncaught TypeError: Cannot read property 'add' of undefined",  
-					     "Console output: &quot;className&quot;"];
+					     "Console output: className"];
 
 		var newExplanation = ["DOM elements do have a method that adds classes, but it is a method of the classList property:", 
 					    "&quot;class&quot; is a reserved keyword in Javascript and cannot be used. DOM Elements have a classList property:",  

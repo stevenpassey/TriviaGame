@@ -307,7 +307,7 @@ function startClock()
 var global_clock_time = 45;
 var global_question_selection = 0;
 var water_level = 0;
-var water_increase_height = ((window.innerHeight - 170) / 45);
+var water_increase_height = ((window.innerHeight - 170) / global_clock_time);
 
 function decreaseClock()
 {
@@ -483,6 +483,9 @@ function clickAnswer(event)
 			$("#answerText" + currentAnswerIndex).text($("#answerText" + currentAnswerIndex).text().substr(4, $("#answerText" + currentAnswerIndex).text().length));
 			$("#answerText" + currentAnswerIndex).prepend("&nbsp; &nbsp;");
 
+			$(this).css({transition: "transform 1s"});
+			$("#answerText" + currentAnswerIndex).css({transition: "transform 1s"});
+
 			$("body").append('<svg width="45" height="30" class="myGreenCheckmark"><rect width="10" height="20" style="fill:rgb(39,130,39); transform-origin: top; transform: rotateZ(-45deg);"></rect><rect width="10" height="30" style="fill:rgb(39,130,39); transform-origin: top; transform: translateX(-17px) translateY(14px) rotateZ(-136deg);"></rect></svg>');
 			var checkMarkTopLocation = $("#answerText" + currentAnswerIndex).offset().top - 12;
 			var checkMarkLeftLocation = $("#answerText" + currentAnswerIndex).offset().left - 40;
@@ -496,17 +499,17 @@ function clickAnswer(event)
 			$(".myRedX").css({left: xLeftLocation + "px"});
 
 
-				var newWhy = (4 - currentAnswerIndex) * 50;
-				setTimeout(function () { $("#answerText" + currentAnswerIndex).css({transform: "translateY(" + newWhy + "px) translateX(5px)"}); 
-								 $(".myGreenCheckmark").css({transform: "translateY(" + newWhy + "px) translateX(5px)"});				
-				}, 1000);
+			var newWhy = (4 - currentAnswerIndex) * 50;
+			setTimeout(function () { $("#answerText" + currentAnswerIndex).css({transform: "translateY(" + newWhy + "px) translateX(5px)"}); 
+							 $(".myGreenCheckmark").css({transform: "translateY(" + newWhy + "px) translateX(5px)"});				
+			}, 1000);
 			
 
 			
-				var newWhy2 = -((otherAnswerIndex - 1) * 50);
-				setTimeout(function () { $("#answerText" + otherAnswerIndex).css({transform: "translateY(" + newWhy2 + "px) translateX(5px)"}); 
-							       $(".myRedX").css({transform: "translateY(" + newWhy2 + "px) translateX(5px)"});							
-				}, 1000);
+			var newWhy2 = -((otherAnswerIndex - 1) * 50);
+			setTimeout(function () { $("#answerText" + otherAnswerIndex).css({transform: "translateY(" + newWhy2 + "px) translateX(5px)"}); 
+							 $(".myRedX").css({transform: "translateY(" + newWhy2 + "px) translateX(5px)"});							
+			}, 1000);
 			
 
 			var wrongAnswersIndexArray = [];
